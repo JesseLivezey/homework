@@ -35,14 +35,14 @@ t=0;
 ax = plt.subplot(222)
 plt.subplot(224)
 Wim = showrfs.showrfs(W)
-for ii in xrange(10000):
+for ii in xrange(1000):
     # paint Gaussian blob at a random position in image
     # (you will need to change the procedure for setting x and y
     # to create a scotoma or over-stimulate retina)
     x=imsz*np.random.rand()
     y=imsz*np.random.rand()
     im=np.exp(-0.5*((x-imx)**2+(y-imy)**2));
-    im[2:5,2:5] = 0
+    #im[2:5,2:5] = 0
     #h.set_data(im), plt.draw()# comment out this line to go faster
 
     # compute output and find winner
@@ -58,7 +58,7 @@ for ii in xrange(10000):
     winner = winner.ravel()
     
     # Hebbian weight update
-    W += eta*(np.outer(im, winner)-W)
+    W += eta*(im.ravel()[np.newaxis,:]-winner[:,np.newaxis]*W)*winner[:,np.newaxis]
 
     #W=W*diag(1./sqrt(sum(W.^2))); # normalize weight vectors
     W=np.dot(W,np.diag(1./np.sqrt(np.sum(W**2,0))));
